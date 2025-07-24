@@ -1,0 +1,87 @@
+body {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: url("./assets/img/space.jpg") center/cover no-repeat;
+  overflow: hidden;
+}
+.sun {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, yellow, orange);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 30px yellow;
+  z-index: 2;
+}
+
+.orbit-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.orbit {
+  position: relative;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 50%; 
+  width: 100%;
+  height: 100%;
+  animation: spin linear infinite;
+}
+
+.planet {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Animación de órbita */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Velocidades específicas para cada planeta */
+.orbit[data-planet="mercury"] {
+  animation-duration: 4.2s;
+}
+
+.orbit[data-planet="venus"] {
+  animation-duration: 5.7s;
+}
+
+.orbit[data-planet="earth"] {
+  animation-duration: 6.7s;
+}
+
+.orbit[data-planet="mars"] {
+  animation-duration: 8.3s;
+}
+
+.orbit[data-planet="jupiter"] {
+  animation-duration: 15.3s;
+}
+
+.orbit[data-planet="saturn"] {
+  animation-duration: 20.6s;
+}
+
+.orbit[data-planet="uranus"] {
+  animation-duration: 29.3s;
+}
+
+.orbit[data-planet="neptune"] {
+  animation-duration: 36.8s;
+}

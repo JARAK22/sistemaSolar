@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@plugin "@midudev/tailwind-animations";
+@keyframes rotar {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.rotar {
+  animation: rotar 4s linear infinite;
+}

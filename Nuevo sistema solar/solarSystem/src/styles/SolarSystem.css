@@ -1,0 +1,94 @@
+.solar-container {
+  background: black;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sol {
+  width: 100px;
+  height: 100px;
+  background: yellow;
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: 0 0 30px 10px yellow;
+  z-index: 10;
+}
+
+/* ORBITAS */
+.orbita {
+  position: absolute;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+/* PLANETAS */
+.planeta {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+/* MERCURIO */
+.orbita-mercurio {
+  width: 150px;
+  height: 150px;
+  animation: girar 4s linear infinite;
+}
+.mercurio {
+  width: 10px;
+  height: 10px;
+  background: gray;
+}
+
+/* VENUS */
+.orbita-venus {
+  width: 200px;
+  height: 200px;
+  animation: girar 6s linear infinite;
+}
+.venus {
+  width: 14px;
+  height: 14px;
+  background: orange;
+}
+
+/* TIERRA */
+.orbita-tierra {
+  width: 270px;
+  height: 270px;
+  animation: girar 8s linear infinite;
+}
+.tierra {
+  width: 16px;
+  height: 16px;
+  background: blue;
+}
+
+/* MARTE */
+.orbita-marte {
+  width: 350px;
+  height: 350px;
+  animation: girar 10s linear infinite;
+}
+.marte {
+  width: 12px;
+  height: 12px;
+  background: red;
+}
+
+/* Animación común para todas las órbitas */
+@keyframes girar {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
