@@ -26,7 +26,9 @@ export default function Play({ topPuntuacion, setTopPuntuacion }: PlayProps) {
     const [finJuego, setFinJuego] = useState(false); // juego terminado
     const [juegoIniciado, setJuegoIniciado] = useState(false); // si el juego ha iniciado
     const [nombre, setNombre] = useState("Anonimo"); // nombre del jugador
-
+    const [dificultad, setDificultad] = useState("normal"); // dificultad del juego
+    const [tiempoVisible, setTiempoVisible] = useState(800); // tiempo visible del icono
+    const [intervalId, setIntervalId] = useState<number | null>(null); // ID del intervalo actual
 
     const guardarPuntuacion = () => {
         const puntuacion = {
@@ -43,17 +45,60 @@ export default function Play({ topPuntuacion, setTopPuntuacion }: PlayProps) {
         setColor(colores[Math.floor(Math.random() * colores.length)]);
         setSize(sizes[Math.floor(Math.random() * sizes.length)]);
         setNombre("Anonimo");
+        // Limpiar intervalo existente
+        if (intervalId) {
+            clearInterval(intervalId);
+            setIntervalId(null);
+        }
+    }
+
+    const cambiarDificultad = (nuevaDificultad: string) => {
+        let nuevoTiempo: number;
+        if (nuevaDificultad === "facil") {
+            nuevoTiempo = 1000;
+        } else if (nuevaDificultad === "normal") {
+            nuevoTiempo = 800;
+        } else if (nuevaDificultad === "dificil") {
+            nuevoTiempo = 300;
+        } else {
+            nuevoTiempo = 800; // valor por defecto
+        }
+        
+        setTiempoVisible(nuevoTiempo);
+        
+        // Si el juego está en curso, reiniciar el intervalo con el nuevo tiempo
+        if (juegoIniciado && !finJuego && intervalId) {
+            clearInterval(intervalId);
+            const nuevoInterval = setInterval(() => {
+                if (finJuego) {
+                    clearInterval(nuevoInterval);
+                    return;
+                }
+                setColor(colores[Math.floor(Math.random() * colores.length)]);
+                setSize(sizes[Math.floor(Math.random() * sizes.length)]);
+                setX(Math.floor(Math.random() * 560));
+                setY(Math.floor(Math.random() * 360));
+            }, nuevoTiempo);
+            setIntervalId(nuevoInterval);
+        }
     }
 
     const irATopPuntuacion = () => {
         navigate('/top-puntuacion');
     }
 
+    console.log(tiempoVisible);
     const movimientoAleatorio = () => {
+        // Limpiar intervalo existente si hay uno
+        if (intervalId) {
+            clearInterval(intervalId);
+        }
+        
         const interval = setInterval(() => {
             if (finJuego) {
                 console.log("finJuego");    
                 clearInterval(interval);
+                setIntervalId(null);
                 return;
             };
             console.log("movimientoAleatorio");
@@ -61,7 +106,9 @@ export default function Play({ topPuntuacion, setTopPuntuacion }: PlayProps) {
             setSize(sizes[Math.floor(Math.random() * sizes.length)]);
             setX(Math.floor(Math.random() * 560));
             setY(Math.floor(Math.random() * 360));
-        }, 800);
+        }, tiempoVisible);
+        
+        setIntervalId(interval);
         return () => clearInterval(interval);
     }
 
@@ -72,6 +119,12 @@ export default function Play({ topPuntuacion, setTopPuntuacion }: PlayProps) {
     }
 
     const iniciarJuego = () => {
+        // Limpiar intervalo existente si hay uno
+        if (intervalId) {
+            clearInterval(intervalId);
+            setIntervalId(null);
+        }
+        
         setFinJuego(false);
         setPuntos(0);
         setTiempoRestante(30);
@@ -97,12 +150,32 @@ export default function Play({ topPuntuacion, setTopPuntuacion }: PlayProps) {
         return () => clearInterval(tiempoJuego);
     }, [juegoIniciado, finJuego]);
 
+    // Limpiar intervalo cuando el componente se desmonte
+    useEffect(() => {
+        return () => {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+        };
+    }, [intervalId]);
+
 
     return (
         <div className="flex flex-col items-center h-screen mt-10">
             <div className="flex flex-row gap-4">
                 <p className="text-2xl font-mono text-white">Puntos: {puntos}</p>
                 <p className="text-2xl font-mono text-white">Tiempo restante: {tiempoRestante} segundos</p>
+            </div>
+            <div>
+                <select className="bg-white text-black px-2 py-1 rounded-md font-mono mt-5" name="dificultad" id="dificultad" onChange={(e) => {
+                    const nuevaDificultad = e.target.value;
+                    setDificultad(nuevaDificultad);
+                    cambiarDificultad(nuevaDificultad);
+                }}>
+                    <option value="normal">Normal (800ms)</option>
+                    <option value="facil">Facil (1000ms)</option>
+                    <option value="dificil">Dificil (300ms)</option>
+                </select>
             </div>
             <div className="flex flex-row gap-4">
                 <Puntuacion finJuego={finJuego} puntos={puntos} guardarPuntuacion={guardarPuntuacion} setNombre={setNombre} nombre={nombre} />
